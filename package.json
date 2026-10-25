@@ -1,21 +1,76 @@
 {
-  "name": "authentication",
-  "version": "1.0.0",
-  "description": "A lightweight, secure asymmetric authentication library for Node.js using public/private key pairs for service-to-service and client-to-service communication.",
-  "main": "index.js",
-  "private": true,
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "@drendal911/authentication",
+  "version": "0.1.0",
+  "description": "Opaque session-token authentication middleware for Express services running on the same host.",
+  "keywords": [
+    "express",
+    "authentication",
+    "bearer",
+    "session",
+    "middleware"
+  ],
+  "author": "Quentin Hogue",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Drendal911/authentication.git"
   },
-  "author": "Quentin Hogue",
-  "license": "ISC",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/Drendal911/authentication/issues"
   },
-  "homepage": "https://github.com/Drendal911/authentication#readme"
+  "homepage": "https://github.com/Drendal911/authentication#readme",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "SECURITY.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@types/express": ">=4.0.0",
+    "express": ">=4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/express": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "publish-release": "npm version patch && npm publish --registry=https://npm.pkg.github.com/",
+    "prepublishOnly": "npm run typecheck && npm run build && npm test"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.25",
+    "@types/node": "^22.20.5",
+    "express": "^4.22.3",
+    "tsup": "^9.0.0",
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.5"
+  }
 }
