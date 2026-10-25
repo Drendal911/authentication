@@ -44,7 +44,8 @@ describe("packaging", () => {
         const consumer = join(work, "consumer");
         mkdirSync(consumer);
         writeFileSync(join(consumer, "package.json"), JSON.stringify({ name: "consumer", private: true, type: "module" }));
-        const installArgs = ["install", join(work, packed.filename), "--no-save", "--ignore-scripts", "--no-audit", "--no-fund"];
+        // Peers are not auto-resolved so the install never queries the ambient registry (which may be GitHub Packages during publish).
+        const installArgs = ["install", join(work, packed.filename), "--no-save", "--legacy-peer-deps", "--ignore-scripts", "--no-audit", "--no-fund"];
         npm(installArgs, { cwd: consumer, stdio: "pipe" });
 
         const installed = JSON.parse(readFileSync(join(consumer, "node_modules", "@drendal911", "authentication", "package.json"), "utf8")) as {
