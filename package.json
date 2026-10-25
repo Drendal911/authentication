@@ -1,6 +1,6 @@
 {
   "name": "@drendal911/authentication",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Opaque session-token authentication middleware for Express services running on the same host.",
   "keywords": [
     "express",
