@@ -1,0 +1,21 @@
+{
+  "name": "authentication",
+  "version": "1.0.0",
+  "description": "A lightweight, secure asymmetric authentication library for Node.js using public/private key pairs for service-to-service and client-to-service communication.",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Drendal911/authentication.git"
+  },
+  "author": "Quentin Hogue",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Drendal911/authentication/issues"
+  },
+  "homepage": "https://github.com/Drendal911/authentication#readme"
+}
