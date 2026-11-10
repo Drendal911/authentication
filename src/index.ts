@@ -1,5 +1,7 @@
 export { createAuth } from "./session.js";
 export type { Auth, AuthOptions, AuthFailureInfo } from "./session.js";
+export { createJwtVerifier } from "./jwt.js";
+export type { JwtVerifierOptions, JwtAlgorithm } from "./jwt.js";
 export type { SessionStore, SessionRecord } from "./store.js";
 export type { AuthContext } from "./context.js";
 export { createSessionToken, hashSessionToken } from "./tokens.js";

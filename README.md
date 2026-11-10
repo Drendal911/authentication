@@ -63,6 +63,38 @@ Options: `realm` (default `"api"`), `clockSkewSeconds` (default 5), `storeTimeou
 
 `req.auth` is a deep-frozen `AuthContext` with `subjectId`, `sessionId`, `scopes`, and `metadata`. It is namespaced deliberately so it does not collide with `req.user` or `req.session`.
 
+## JWT verification
+
+`createJwtVerifier(options)` verifies stateless JWT Bearer tokens and returns the same `{ requireAuth, optionalAuth, requireScope }` interface as `createAuth`. It has no runtime dependencies (`node:crypto` and global `fetch`).
+
+```ts
+import { createJwtVerifier } from "@drendal911/authentication";
+
+const auth = createJwtVerifier({
+  jwksUri: "https://idp.example.com/.well-known/jwks.json",
+  issuer: "https://idp.example.com/",
+  audience: "my-api",
+});
+app.use("/api", auth.requireAuth);
+```
+
+Options:
+
+- `jwksUri`: required when RS256 or ES256 is allowed. Must be `https:` unless `allowInsecureJwksUri: true`.
+- `issuer`, `audience`: required, string or string[]. `aud` must intersect the configured list.
+- `algorithms`: default `["RS256", "ES256"]`. The token `alg` header must be in this list. `none` is never accepted.
+- `hmacSecret`: only allowed (and then required) when `"HS256"` is explicitly listed in `algorithms`. Minimum 32 bytes.
+- `requiredClaims`: claim names that must be present.
+- `clockSkewSeconds` (default 5), `jwksTimeoutMs` (default 1000), `jwksCacheTtlMs` (default 600000), `jwksRefetchCooldownMs` (default 30000), `realm`, `skipPreflight`, `onAuthFailure`, `fetch`.
+
+Invalid configuration throws a `TypeError` at startup.
+
+Claim mapping to `req.auth`: `subjectId` = `sub` (required), `sessionId` = `sid`, `scopes` = `scp` (array or space-separated string), falling back to `scope`, `metadata.tenantId` = `tenant_id`. `exp` is required. `nbf` is honored with clock skew.
+
+Keys: the token must carry a `kid`. The JWKS is cached for `jwksCacheTtlMs`. An unknown `kid` triggers at most one refetch per `jwksRefetchCooldownMs`. A JWK's `alg` (if set) must match the token's `alg`, and `use` (if set) must be `sig`. RSA keys must be at least 2048 bits. ES256 requires P-256. Tokens with a `crit` header are rejected.
+
+Failures use the same responses as the opaque path: a bad, unsigned, wrong-algorithm, expired, or wrong-issuer/audience token is 401, missing scope is 403, and a JWKS fetch failure or timeout is 503.
+
 ## Responses
 
 | Case | Status | Body | Header |
